@@ -7,7 +7,7 @@
  * Assignment #5: Recursive Grammar Solver
  *  
  * This class is designed to accept a list of Backus-Naur Form grammar rules
- * and provide various methods related to grammar / sentence generation
+ * and provide various methods related to grammar / sentence generation         
 */
 
 import java.util.*;
@@ -17,7 +17,7 @@ public class GrammarSolver
     private SortedMap<String,List<String>> grammar;
     
     //on creation, maps input list of grammar symbols to rules
-    //assumes input Strings have format: "nonterminal::=rule2 rule1|nonterminal2"
+    //assumes input Strings are formatted in Backus-Naur Form
     //throws IllegalArgumentException if given list is empty, or contains duplicate symbols
     public GrammarSolver(List<String> inputGrammar)
     {
@@ -34,7 +34,7 @@ public class GrammarSolver
     
     //helper method for constructor
     //assumes non-empty input string with correct grammar-rule formatting
-    //maps nonterminal grammar rules to their options
+    //maps nonterminal grammar rules to their options (case-sensitive)
     //throws IllegalArgumentException if a duplicate nonterminal is passed
     private void parseGrammar(String inputLine)
     {
@@ -63,7 +63,7 @@ public class GrammarSolver
         return grammar.keySet().contains(nonterminal);
     }
     
-    //accepts input nonterminal symbol and an integer count
+    //accepts input nonterminal symbol (case-sensitive) and an integer count
     //uses grammar rules to generate count # of string groups
     //returns them as String array
     //throws IllegalArgumentException if input nonterminal not in grammar set, or if count < 0
@@ -115,7 +115,7 @@ public class GrammarSolver
     }
     
     //helper method for generate()
-    //picks a random grammar rule out of those available with given symbol
+    //returns a randomly chosen grammar rule out of those available with input String symbol
     private String randomRule(String symbol)
     {
         Random r = new Random();
