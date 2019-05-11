@@ -8,7 +8,7 @@ import java.util.*;
 import java.io.*;
 
 public class HangmanMain  {
-    public static final String DICTIONARY_FILE = "english.txt";
+    public static final String DICTIONARY_FILE = "dictionary.txt";
     public static final boolean SHOW_COUNT = false;  // show # of choices left
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -31,7 +31,7 @@ public class HangmanMain  {
 
         // set up the HangmanManager and start the game
         List<String> dictionary2 = Collections.unmodifiableList(dictionary);
-        HangmanManager hangman = new HangmanManager(dictionary2, length, max);
+        HangmanManager hangman = new HangmanManager2(dictionary2, length, max);
         if (hangman.words().isEmpty()) {
             System.out.println("No words of that length in the dictionary.");
         } else {
@@ -54,6 +54,7 @@ public class HangmanMain  {
             if (hangman.guesses().contains(ch)) {
                 System.out.println("You already guessed that");
             } else {
+                System.out.println(hangman.words());
                 int count = hangman.record(ch);
                 if (count == 0) {
                     System.out.println("Sorry, there are no " + ch + "'s");
