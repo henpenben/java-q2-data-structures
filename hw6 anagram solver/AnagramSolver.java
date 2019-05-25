@@ -3,7 +3,8 @@ import java.util.*;
 
 public class AnagramSolver
 {
-    private Map<String, LetterInventory> dictionary;
+    private Map<String, LetterInventory> dictionaryMap;
+    private List<String> dictionary;
     
     public AnagramSolver(List<String> list)
     {
