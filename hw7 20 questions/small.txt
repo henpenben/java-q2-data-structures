@@ -1,0 +1,10 @@
+Q:
+Is it an animal?
+Q:
+Can it fly?
+A:
+bird
+A:
+dog
+A:
+computer
