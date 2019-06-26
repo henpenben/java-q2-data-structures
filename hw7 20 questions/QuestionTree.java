@@ -1,5 +1,16 @@
-import java.util.*;
-import java.io.*;
+/*
+   Henry Hough
+   27 May 2019
+   CSE143BL
+   TA: Zachary Keyes
+   Assignment #7: 20 Questions
+   
+   This class handles playing a 20-questions style game with the user. Uses a tree of questions to
+   guess what the user might be thinking about, and learns new things from the user when it's wrong
+*/
+
+import java.util.Scanner;
+import java.io.PrintStream;
 
 public class QuestionTree
 {
@@ -14,37 +25,17 @@ public class QuestionTree
     }
     
     //takes input (Scanner input)
-    //reads tree from scanner and adds it to root
-    //assumes scanner contains legal, formatted node text
+    //replaces current tree with one read from (input)
+    //assumes (input) is legally formatted (QuestionNode write() output)
     public void read(Scanner input)
     {
-        overallRoot = readHelper(input);
+        overallRoot = readReturn(input);
     }
 
-    //x = change(x) is hard
-
-//     private void read(QuestionNode root, Scanner input)
-//     {
-//         if(input.hasNextLine() && root != null && root.type.equals("Q:"))
-//         {
-//             if(root.left == null)
-//             {   
-//                 root.left = new QuestionNode(input.nextLine(), input.nextLine());
-//                 read(root.left, input);
-//             }
-//             if(root.right == null && input.hasNextLine())
-//             {//have to check for next line again, since don't always have left && right branch
-//                 root.right = new QuestionNode(input.nextLine(), input.nextLine());
-//                 read(root.right, input);
-//             }
-//         }
-//     }
-//
-
     //takes input (Scanner input)
-    //reads tree from scanner and adds it to root
-    //assumes scanner contains legal, formatted node text in preorder format
-    private QuestionNode readHelper(Scanner input)
+    //creates and returns a binary tree by reading from (input)
+    //assumes (input) is legally formatted (QuestionNode write() output)
+    private QuestionNode readReturn(Scanner input)
     {
         if(input.hasNextLine())
         {
@@ -53,21 +44,23 @@ public class QuestionTree
             QuestionNode root = new QuestionNode(type, data);
             if(type.equals("Q:"))
             {
-                root.left = readHelper(input);
-                root.right = readHelper(input);
+                root.left  = readReturn(input);
+                root.right = readReturn(input);
             }
             return root;
         }
         return null;
     }
     
-    //writes a text version of the tree to given (PrintStream output)
+    //prints to input (PrintStream output) a preoreder traversal of the current tree
+    //writes with format "type\ndata" for each branch / leaf
+    //assumes given PrintStream is open for writing   
     public void write(PrintStream output)
     {
         write(output, overallRoot);
     }
     
-    //prints to input (PrintStream output) a pre-order traversal of input (QuestionNode root)
+    //prints to input (PrintStream output) a preorder traversal of input (QuestionNode root)
     private void write(PrintStream output, QuestionNode root)
     {
         if(root != null)
@@ -79,102 +72,65 @@ public class QuestionTree
         }
     }
     
+    //uses current tree to ask questions about the object the user is thinking about
+    //continues to ask until it either guesses the object, or it fails
+    //if it fails to guess the object, prompts user to add it to the tree
     public void askQuestions()
     {
-        askQuestions(overallRoot, "");
+        overallRoot = askQuestions(overallRoot);
     }
     
-//     private void askQuestions(QuestionNode root, String path)
-//     {
-//         if(root.type.equals("Q:"))
-//         {
-//             if(yesTo(root.data))
-//             {
-//                 path += "y";
-//                 askQuestions(root.left, path);
-//             }else
-//             {
-//                 path += "n";
-//                 askQuestions(root.right, path);
-//             }
-//         }else
-//         {
-//             if(yesTo("would your object happen to be " + root.data))
-//             {
-//                 System.out.println("Great, I got it right!");
-//             }else
-//             {
-//                 System.out.print("What is the name of your object? ");
-//                 String object = console.nextLine();
-//                 System.out.println("Please give me a yes/no question that");
-//                 System.out.println("distinguishes between your object");
-//                 System.out.print("and mine--> ");
-//                 String question = console.nextLine(); 
-//                 boolean answer = yesTo("And what is the answer for your object?");
-//                 change(overallRoot, path, answer, question, object, 0);
-//             }
-//         }
-//     }
+    //helper method for askQuestions()
+    //manages asking questions until failure/success, and adding new questions to the tree  
+    private QuestionNode askQuestions(QuestionNode root)
+    {
+        if(root.type.equals("Q:"))
+        {
+            if(yesTo(root.data))
+            {
+                root.left = askQuestions(root.left);
+            }
+            else
+            {
+                root.right = askQuestions(root.right);
+            }
+        }
+        else if(yesTo("Would your object happen to be " + root.data + "?"))
+        {
+            System.out.println("Great, I got it right!");
+        }
+        else
+        {   
+            System.out.print("What is the name of your object? ");
+            QuestionNode newAnswer = new QuestionNode("A:", console.nextLine());
+            System.out.println("Please give me a yes/no question that");
+            System.out.println("distinguishes between your object");
+            System.out.print  ("and mine--> ");
+            QuestionNode newQuestion = new QuestionNode("Q:", console.nextLine());
+            root = addQuestion(root, newQuestion, newAnswer, 
+                               yesTo("And what is the answer for your object?"));
+        }
+        return root;
+    }
     
-    private QuestionNode add(QuestionNode root, QuestionNode newQuestion, 
-    
-//     private void change(QuestionNode root, String path, boolean b, String q, String a, int i)
-//     {
-//         if(path.length() == 0)
-//         {
-//             QuestionNode newQ = new QuestionNode("Q:", q);
-//             QuestionNode newA = new QuestionNode("A:", a);
-//             if(b)
-//             {
-//                 newQ.left = newA;
-//                 newQ.right = root;
-//             }else
-//             {
-//                 newQ.left = root;
-//                 newQ.right = newA;
-//             }
-//             overallRoot = newQ;
-//         }else if(path.length() - i == 1)
-//         {
-//             QuestionNode newQ = new QuestionNode("Q:", q);
-//             QuestionNode newA = new QuestionNode("A:", a);
-//             if(path.charAt(path.length() - 1) == 'y')
-//             {
-//                 if(b)
-//                 {
-//                     newQ.left = newA;
-//                     newQ.right = root.left;
-//                 }else
-//                 {
-//                     newQ.left = root.left;
-//                     newQ.right = newA;
-//                 }
-//                 root.left = newQ;
-//                 
-//             }else
-//             {
-//                 if(b)
-//                 {
-//                     newQ.left = newA;
-//                     newQ.right = root.right;
-//                 }else
-//                 {
-//                     newQ.left = root.right;
-//                     newQ.right = newA;
-//                 }
-//                 root.right = newQ;
-//             }
-//         }else
-//         {
-//             if(path.charAt(i) == 'y')
-//             {
-//                 change(root.left, path, b, q, a, i+1);
-//             }else
-//             {
-//                 change(root.right, path, b, q, a, i+1);
-//             }
-//         }
-//     }
+    //helper method for askQuestions(QuestionNode root)
+    //takes input QuestionNodes (root), (newQuestion), (newAnswer)
+    //returns small tree with (root) & (newAnswer) as branches of (newQuestion)
+    //branch arrangement depends on (answer)
+    private QuestionNode addQuestion(QuestionNode root, QuestionNode newQuestion, 
+                                     QuestionNode newAnswer, boolean answer)
+    {
+        if(answer)
+        {
+            newQuestion.left = newAnswer;
+            newQuestion.right = root;
+        }else
+        {
+            newQuestion.left = root;
+            newQuestion.right = newAnswer;
+        }
+        return newQuestion;
+    }
     
     //post: asks the user a question, forcing an answer of "y" or "n";
     //returns true if the answer was yes, returns false otherwise

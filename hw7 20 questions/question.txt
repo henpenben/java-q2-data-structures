@@ -1,10 +1,30 @@
 Q:
-Is it an animal?
+Is it alive?
 Q:
 Does it hop?
+Q:
+Is it amphibious?
+Q:
+Is it bumpy?
+A:
+toad
 A:
 frog
 A:
+bunny
+Q:
+Is it social?
+A:
 dog
+A:
+cat
+Q:
+Can you eat it?
+Q:
+Do you toast it?
+A:
+bread
+A:
+soup
 A:
 computer

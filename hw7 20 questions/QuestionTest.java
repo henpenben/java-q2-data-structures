@@ -12,6 +12,7 @@ public class QuestionTest
         
         q.read(s);
         q.write(System.out);
+        q.askQuestions();
     }
     
 }

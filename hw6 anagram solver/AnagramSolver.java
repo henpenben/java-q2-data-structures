@@ -12,14 +12,9 @@ import java.util.*;
 
 public class AnagramSolver
 {
-<<<<<<< HEAD
-    private Map<String, LetterInventory> dictionaryMap;
-    private List<String> dictionary;
-=======
     private Map<String, LetterInventory> wordMap;
     private List<String> wordList;
     //could have only one field if LinkedHashMap was used
->>>>>>> a3719a58815f59562e102798a479122913286167
     
     //creates an AnagramSolver object with an input List<String> that is used as the dictionary
     //to "solve" anagrams with. words can only be rearranged to words present in the dictionary
@@ -72,7 +67,7 @@ public class AnagramSolver
     private void print(LetterInventory inventory, int maxCount, 
                        List<String> output,       List<String> availableDictionary)
     {
-        if(inventory.isEmpty())
+        if(inventory.isEmpty() && maxCount == 0)
         {//when all the letters in the inventory have been used up, impossible to make more words
             System.out.println(output);
         }
@@ -86,14 +81,8 @@ public class AnagramSolver
                 if(newInv != null)
                 {//if removing this word is possible
                     output.add(currWord);//add this word to output list
-                    if(maxCount > 0)
-                    {
-                        print(newInv, maxCount - 1, output, availableDictionary);
-                    }else if(maxCount == -1) //when user did not request a limit to number of words
-                    {
-                        print(newInv, maxCount,     output, availableDictionary);
-                    }
-                    output.remove(currWord);
+                    print(newInv, maxCount - 1, output, availableDictionary);
+                    output.remove(output.lastIndexOf(currWord));
                 }
             }
         }
